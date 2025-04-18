@@ -9,8 +9,6 @@ L'utilisateurs authentifié peut :
 - créer, afficher, modifier et supprimer ses propres tâches.
 - Filtrer ses tâches par statut.
 - Modifier le statut d’une tâche.
-- Consulter un tableau de bord avec des statistiques sur ses tâches (nombre total et
-répartition par statut).
 
 ### Prérequis
   Avant de commencer, assurez-vous que les éléments suivants sont installés sur votre machine :
