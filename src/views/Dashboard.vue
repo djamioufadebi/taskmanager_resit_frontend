@@ -102,7 +102,7 @@ export default {
 <style scoped>
 /* Personnalisation du style */
 .card-body {
-    font-size: 18px;
+    font-size: 15px;
 }
 
 .card-title {
@@ -110,6 +110,6 @@ export default {
 }
 
 .fs-1 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
 }
 </style>

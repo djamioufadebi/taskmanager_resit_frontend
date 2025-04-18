@@ -1,115 +1,319 @@
-<template>
-    <div class="container mt-3">
 
-        <h2 class="mb-4">Gestion des Tâches</h2>
+<!-- <template>
+    <div class="container-fluid py-4">
 
-        <div v-if="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ successMessage }}
-            <button type="button" class="btn-close" @click="successMessage = ''"></button>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold text-primary">Gestion des Tâches</h2>
         </div>
+        <div class="row">
 
-        <div class="card p-3 mb-4 shadow-sm">
-            <div class="card-header">
-                <h4 class="">Formulaire de crétaion de tâche</h4>
-            </div>
-            <div class="card-body">
-                <form @submit.prevent="createTask">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <input v-model="newTask.title" class="form-control" placeholder="Titre de la tâche"
-                                required />
-                        </div>
-                        <div class="col-md-4">
-                            <input v-model="newTask.description" class="form-control" placeholder="Description" />
-                        </div>
-                        <div class="col-md-2">
-                            <select v-model="newTask.status" class="form-select">
-                                <option value="en attente">En attente</option>
-                                <option value="en cours">En cours</option>
-                                <option value="terminé">Terminé</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-primary w-100" type="submit">Ajouter</button>
-                        </div>
+            <div class="col-md-5">
+
+
+                
+                <div v-if="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ successMessage }}
+                    <button type="button" class="btn-close" @click="successMessage = ''"></button>
+                </div>
+
+             
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0 text-secondary">Créer une nouvelle tâche</h5>
                     </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Barre de recherche et filtre -->
-        <div class="row justify-content-between mb-3">
-            <div class="col-md-4 me-2">
-                <input v-model="searchQuery" class="form-control" placeholder="Rechercher par titre"
-                    @input="fetchTasks" />
-            </div>
-            <div class="col-md-3 pt-2">
-                <select v-model="statusFilter" class="form-select" @change="fetchTasks">
-                    <option value="">Tous</option>
-                    <option value="en attente">En attente</option>
-                    <option value="en cours">En cours</option>
-                    <option value="terminé">Terminé</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- chargement -->
-        <div v-if="loading" class="text-center">
-            <div class="spinner-border text-primary" role="status"></div>
-        </div>
-
-        <!-- Liste des tâches -->
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>Titre</th>
-                        <th>Description</th>
-                        <th>Statut</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody v-if="tasks.length > 0">
-                    <tr v-for="task in tasks" :key="task.id">
-                        <td>{{ task.title }}</td>
-                        <td>{{ task.description }}</td>
-                        <td>
-                            <select v-model="task.status" class="form-select" @change="updateTask(task)">
-                                <option value="en attente">En attente</option>
-                                <option value="en cours">En cours</option>
-                                <option value="terminé">Terminé</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div class="d-flex">
-                                <a class="btn btn-success me-2" href="#" @click="viewTask(task)">Voir</a>
-                                <a class="btn btn-warning me-2" href="#" @click="openEditModal(task)">Modifier</a>
-                                <a class="btn btn-danger" href="#" @click="confirmDelete(task.id)">Supprimer</a>
+                    <div class="card-body">
+                        <form @submit.prevent="createTask">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input v-model="newTask.title" class="form-control" placeholder="Titre de la tâche"
+                                        required />
+                                </div>
+                                <div class="col-md-4">
+                                    <textarea v-model="newTask.description" class="form-control"
+                                        placeholder="Description" />
+                                </div>
+                                <div class="col-md-2">
+                                    <select v-model="newTask.status" class="form-select">
+                                        <option value="en attente">En attente</option>
+                                        <option value="en cours">En cours</option>
+                                        <option value="terminé">Terminé</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary w-100" type="submit">Ajouter</button>
+                                </div>
                             </div>
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody v-else>
-                    <tr>
-                        <td colspan="4" class="text-center text-muted">Aucune tâche disponible pour le moment.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+               
+                <div class="row align-items-center mb-4">
+                    <div class="col-md-5">
+                        <input v-model="searchQuery" class="form-control" placeholder="Rechercher une tâche..."
+                            @input="fetchTasks" />
+                    </div>
+                    <div class="col-md-3">
+                        <select v-model="statusFilter" class="form-select" @change="fetchTasks">
+                            <option value="">Tous les statuts</option>
+                            <option value="en_attente">En attente</option>
+                            <option value="en cours">En cours</option>
+                            <option value="terminé">Terminé</option>
+                        </select>
+                    </div>
+                </div>
 
-        <!-- Pagination -->
-        <div class="d-flex justify-content-between mt-3">
-            <button class="btn btn-outline-primary" :disabled="currentPage === 1" @click="changePage(currentPage - 1)">
-                Précédent
+               
+                <div v-if="loading" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                </div>
+
+               
+                <div v-else class="table-responsive shadow-sm rounded">
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>Titre</th>
+                                <th>Description</th>
+                                <th>Statut</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody v-if="tasks.length">
+                            <tr v-for="task in tasks" :key="task.id">
+                                <td>{{ task.title }}</td>
+                                <td>{{ task.description }}</td>
+                                <td>
+                                    <select v-model="task.status" class="form-select" @change="updateTask(task)">
+                                        <option value="en_attente">En attente</option>
+                                        <option value="en_cours">En cours</option>
+                                        <option value="terminé">Terminé</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <button class="btn btn-sm btn-outline-success"
+                                            @click="viewTask(task)">Voir</button>
+                                        <button class="btn btn-sm btn-outline-warning"
+                                            @click="openEditModal(task)">Modifier</button>
+                                        <button class="btn btn-sm btn-outline-danger"
+                                            @click="confirmDelete(task.id)">Supprimer</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">Aucune tâche trouvée.</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div> 
+
+
+        <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ isEditing ? 'Modifier la tâche' : 'Détails de la tâche' }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form @submit.prevent="updateTask">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Titre</label>
+                                <input type="text" id="title" v-model="selectedTask.title" class="form-control"
+                                    :disabled="!isEditing" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea id="description" v-model="selectedTask.description" class="form-control"
+                                    :disabled="!isEditing"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Statut</label>
+                                <select id="status" v-model="selectedTask.status" class="form-select"
+                                    :disabled="!isEditing">
+                                    <option value="en attente">En attente</option>
+                                    <option value="en cours">En cours</option>
+                                    <option value="terminé">Terminé</option>
+                                </select>
+                            </div>
+                            <button v-if="isEditing" type="submit" class="btn btn-primary w-100">Enregistrer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="modal fade" id="deleteTaskModal" tabindex="-1" aria-labelledby="deleteTaskLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmer la suppression</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">Êtes-vous sûr de vouloir supprimer cette tâche ?</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-danger" @click="deleteTask">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <button class="btn btn-outline-secondary" :disabled="currentPage === 1"
+                @click="changePage(currentPage - 1)">
+                &laquo; Précédent
             </button>
-            <span>Page {{ currentPage }} / {{ totalPages }}</span>
-            <button class="btn btn-outline-primary" :disabled="currentPage === totalPages"
+            <span class="fw-bold">Page {{ currentPage }} / {{ totalPages }}</span>
+            <button class="btn btn-outline-secondary" :disabled="currentPage === totalPages"
                 @click="changePage(currentPage + 1)">
-                Suivant
+                Suivant &raquo;
             </button>
         </div>
+    </div>
+</template>-->
 
-        <!-- Modale Lecture et Modification -->
+<template>
+    <div class="container-fluid py-4">
+        <!-- Titre principal -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold text-primary"> Gestion des Tâches</h2>
+        </div>
+
+        <div class="row g-4">
+            <!-- Formulaire de création -->
+            <div class="col-lg-4">
+                <!-- Message de succès -->
+                <div v-if="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ successMessage }}
+                    <button type="button" class="btn-close" @click="successMessage = ''"></button>
+                </div>
+
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-light text-secondary fw-bold">Créer une nouvelle tâche</div>
+                    <div class="card-body">
+                        <form @submit.prevent="createTask">
+                            <div class="mb-3">
+                                <input v-model="newTask.title" class="form-control" placeholder="Titre de la tâche"
+                                    required />
+                            </div>
+                            <div class="mb-3">
+                                <textarea v-model="newTask.description" class="form-control" placeholder="Description"
+                                    rows="3" />
+                            </div>
+                            <div class="mb-3">
+                                <select v-model="newTask.status" class="form-select">
+                                    <option value="en attente">En attente</option>
+                                    <option value="en cours">En cours</option>
+                                    <option value="terminé">Terminé</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary w-100" type="submit">Ajouter la tâche</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liste et filtre des tâches -->
+            <div class="col-lg-8">
+                <!-- Barre de recherche et filtre -->
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-md-6">
+                        <input v-model="searchQuery" class="form-control" placeholder="Rechercher une tâche..."
+                            @input="fetchTasks" />
+                    </div>
+                    <div class="col-md-4">
+                        <select v-model="statusFilter" class="form-select" @change="fetchTasks">
+                            <option value="">Tous les statuts</option>
+                            <option value="en attente">En attente</option>
+                            <option value="en cours">En cours</option>
+                            <option value="terminé">Terminé</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Chargement -->
+                <div v-if="loading" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                </div>
+
+                <!-- Tableau -->
+                <div v-else class="table-responsive shadow-sm rounded">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th >Titre</th>
+                                <th>Description</th>
+                                <th>Statut</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="tasks.length">
+                            <tr v-for="task in tasks" :key="task.id">
+                                <td>{{ task.title }}</td>
+                                <td class="text-truncate" style="max-width: 200px;">{{ task.description }}</td>
+                                <td>
+                                    <select v-model="task.status" class="form-select form-select-sm"
+                                        @change="updateTask(task)">
+                                        <option value="en attente">En attente</option>
+                                        <option value="en cours">En cours</option>
+                                        <option value="terminé">Terminé</option>
+                                    </select>
+                                </td>
+                                <td class="text-end">
+                                    <!-- Dropdown Bootstrap -->
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            Actions
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="#" @click.prevent="viewTask(task)">
+                                                    Voir</a></li>
+                                            <li><a class="dropdown-item" href="#" @click.prevent="openEditModal(task)">
+                                                    Modifier</a></li>
+                                            <li>
+                                                <hr class="dropdown-divider" />
+                                            </li>
+                                            <li><a class="dropdown-item text-danger" href="#"
+                                                    @click.prevent="confirmDelete(task.id)">Supprimer</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">Aucune tâche trouvée.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <button class="btn btn-outline-secondary" :disabled="currentPage === 1"
+                        @click="changePage(currentPage - 1)">
+                        &laquo; Précédent
+                    </button>
+                    <span class="fw-bold">Page {{ currentPage }} / {{ totalPages }}</span>
+                    <button class="btn btn-outline-secondary" :disabled="currentPage === totalPages"
+                        @click="changePage(currentPage + 1)">
+                        Suivant &raquo;
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -145,7 +349,6 @@
             </div>
         </div>
 
-        <!-- Modale de confirmation de suppression -->
         <div class="modal fade" id="deleteTaskModal" tabindex="-1" aria-labelledby="deleteTaskLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -161,8 +364,10 @@
                 </div>
             </div>
         </div>
+
     </div>
 </template>
+
 
 
 <script>
@@ -215,7 +420,7 @@ export default {
             }
         };
 
-        const createTask = async () => {
+        /* const createTask = async () => {
             //loading.value = true;
             try {
                 await api.post("/tasks", newTask.value);
@@ -227,10 +432,27 @@ export default {
             } catch (error) {
                 console.error("Erreur lors de la création de la tâche :", error);
             } 
-            /* finally {
-                loading.value = false;
-            } */
+        }; */
+
+        const createTask = async () => {
+            try {
+                console.log("Nouvelle tâche à envoyer :", newTask.value);
+                await api.post("/tasks", newTask.value);
+                successMessage.value = "Tâche créée avec succès !";
+                fetchTasks();
+                newTask.value = { title: "", description: "", due_date: "", status: "en attente" };
+                alert("Tâche créée avec succès !");
+                hideMessageAfterDelay();
+            } catch (error) {
+                if (error.response) {
+                    console.error("Erreur API :", error.response.data);
+                    alert("Erreur lors de la création : " + (error.response.data.message || "Erreur inconnue"));
+                } else {
+                    console.error("Erreur inconnue :", error.message);
+                }
+            }
         };
+
 
         const viewTask = (task) => {
             selectedTask.value = { ...task };
