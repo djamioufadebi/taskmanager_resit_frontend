@@ -17,7 +17,7 @@ const routes = [
   },
 
   { path: '/dashboard', 
-    component: Home,
+    component: Dashboard,
     name : "dashboard" 
   },
 
@@ -68,7 +68,7 @@ const router = createRouter({
 });
 
 // Navigation guard : protège les routes
-/* router.beforeEach((to, from, next) => {
+ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isAuthenticated()) {
     next({ name: 'login' });
   } else if ((to.name === 'login' || to.name === 'register') && isAuthenticated()) {
@@ -76,6 +76,6 @@ const router = createRouter({
   } else {
     next();
   }
-}); */
+}); 
 
 export default router;
