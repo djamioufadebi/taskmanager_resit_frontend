@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <header>
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow fw-bold text-uppercase">
         <div class="container-fluid">
@@ -11,6 +10,7 @@
 
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
+              
               <!-- Lien vers le tableau de bord si l'utilisateur est connecté -->
               <li class="nav-item" v-if="isAuthenticated">
                 <router-link class="nav-link" :to="{ name: 'dashboard' }" active-class="active">
@@ -36,14 +36,7 @@
               <router-link class="btn btn-outline-light ms-2" v-if="!isAuthenticated" :to="{ name: 'register' }">
                 <i class="bi bi-pencil-square"></i> S'inscrire
               </router-link>
-              <!-- <router-link class="btn btn-outline-light ms-2" v-if="!isAuthenticated" :to="{ name: 'login' }">
-                <i class="bi bi-box-arrow-in-right"></i> Connexion
-              </router-link> -->
-
             </div>
-
-
-
           </div>
         </div>
       </nav>
