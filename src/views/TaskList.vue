@@ -7,8 +7,10 @@
         </div>
 
         <div class="row g-4">
+
             <!-- Formulaire de création -->
             <div class="col-lg-4">
+                
                 <!-- Message de succès -->
                 <div v-if="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ successMessage }}
@@ -19,13 +21,15 @@
                     <div class="card-header bg-secondary text-white fw-bold">Créer une nouvelle tâche</div>
                     <div class="card-body">
                         <form @submit.prevent="createTask">
+
                             <div class="mb-3">
                                 <input v-model="newTask.title" class="form-control" placeholder="Titre de la tâche"
                                     required />
                             </div>
+
                             <div class="mb-3">
                                 <textarea v-model="newTask.description" class="form-control" placeholder="Description"
-                                    rows="3" />
+                                    rows="3"/>
                             </div>
 
                             <div class="mb-3">
@@ -44,6 +48,7 @@
                         </form>
                     </div>
                 </div>
+
             </div>
 
             <!-- Liste et filtre des tâches -->
